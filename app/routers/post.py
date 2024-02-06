@@ -58,9 +58,8 @@ def delete_post(id: int, db: Session = Depends(get_db), current_user: int = Depe
     # deleted_post = cursor.fetchone()
     # conn.commit()
     deleted_post = db.query(models.Post).filter(models.Post.id == id)
-    post = deleted_post.first()
 
-    if post == None:
+    if (post := deleted_post.first()) == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with id: {id} does not exist")
     
     if post.owner_id != current_user.id:
@@ -77,9 +76,8 @@ def update_post(id:int, post: schemas.PostCreate, db: Session = Depends(get_db),
     # updated_post = cursor.fetchone()
     # conn.commit()
     post_query = db.query(models.Post).filter(models.Post.id == id)
-    updated_post = post_query.first()
 
-    if updated_post == None:
+    if (updated_post := post_query.first()) == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with id: {id} does not exist")
     
     if updated_post.owner_id != current_user.id:
